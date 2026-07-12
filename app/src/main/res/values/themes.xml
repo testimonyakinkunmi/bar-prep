@@ -37,7 +37,12 @@
         <item name="rippleColor">@color/gold_300</item>
         <item name="android:lineSpacingMultiplier">1.3</item>
     </style>
-
+    
+    <style name="Widget.BarPrep.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/brand_midnight</item>
+        <item name="strokeColor">@color/brand_midnight</item>
+    </style>
+    
     <style name="OptionButton.Correct">
         <item name="android:textColor">@color/emerald_600</item>
         <item name="strokeColor">@color/emerald_500</item>
