@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BarPrep NG</string>
+    <string name="civil_litigation">Civil Litigation</string>
+    <string name="start_quiz">Start Quiz</string>
+    <string name="continue_quiz">Continue</string>
+    <string name="question_of">Question %1$d of %2$d</string>
+    <string name="correct">Correct!</string>
+    <string name="incorrect">Incorrect</string>
+    <string name="your_score">Your Score</string>
+    <string name="view_corrections">View All Corrections</string>
+    <string name="try_again">Try Again</string>
+    <string name="home">Home</string>
+    <string name="progress">Progress</string>
+    <string name="insights">Insights</string>
+    <string name="streak">Day Streak</string>
+    <string name="questions_answered">Questions Answered</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="weakest_topic">Weakest Topic</string>
+    <string name="law_reference">Law Reference</string>
+    <string name="explanation">Explanation</string>
+    <string name="next_question">Next Question</string>
+    <string name="finish">Finish</string>
+    <string name="random_quiz">Random Quiz (20 Qs)</string>
+    <string name="select_week">Select a Week</string>
+    <string name="performance_over_time">Performance Over Time</string>
+    <string name="topic_accuracy">Topic Accuracy</string>
+    <string name="questions_per_week">Questions Per Week</string>
+    <string name="daily_challenge">Daily Challenge</string>
+    <string name="micro_quiz">Quick 5-Question Quiz</string>
+</resources>

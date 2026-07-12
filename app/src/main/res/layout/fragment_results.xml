@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_midnight">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:id="@+id/tv_result_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quiz Complete!"
+            android:textColor="@color/text_primary"
+            android:textSize="26sp"
+            android:fontFamily="@font/inter_bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tv_result_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Week 3 · Courts with Civil Jurisdiction"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="28dp"/>
+
+        <!-- Score ring + stats row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <!-- Score circle placeholder -->
+            <FrameLayout
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:background="@drawable/bg_streak_badge"
+                android:layout_marginEnd="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_score_pct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="80%"
+                        android:textColor="@color/text_on_accent"
+                        android:textSize="26sp"
+                        android:fontFamily="@font/inter_bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="score"
+                        android:textColor="@color/text_on_accent"
+                        android:textSize="11sp"
+                        android:alpha="0.8"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Correct -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="14dp">
+                    <View android:layout_width="4dp" android:layout_height="32dp"
+                        android:background="#00C48C" android:layout_marginEnd="10dp"/>
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+                        <TextView android:id="@+id/tv_correct_count" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="28"
+                            android:textColor="@color/correct_green" android:textSize="20sp" android:fontFamily="@font/inter_bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="correct" android:textColor="@color/text_secondary" android:textSize="11sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Wrong -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+                    <View android:layout_width="4dp" android:layout_height="32dp"
+                        android:background="#FF4D6D" android:layout_marginEnd="10dp"/>
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+                        <TextView android:id="@+id/tv_wrong_count" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="7"
+                            android:textColor="@color/wrong_red" android:textSize="20sp" android:fontFamily="@font/inter_bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="incorrect" android:textColor="@color/text_secondary" android:textSize="11sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Verdict card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_verdict"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#111D2E"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/tv_verdict"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Outstanding! Keep up the excellent work."
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:fontFamily="@font/inter_semibold"
+                android:gravity="center"
+                android:padding="18dp"
+                android:lineSpacingMultiplier="1.4"/>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Review answers list -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Review Answers"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_semibold"
+            android:layout_marginBottom="12dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
+
+        <!-- Action buttons -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_retry"
+            style="@style/Widget.BarPrep.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="20dp"
+            android:text="Retry This Week"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_home"
+            style="@style/Widget.BarPrep.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="10dp"
+            android:text="Back to Home"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

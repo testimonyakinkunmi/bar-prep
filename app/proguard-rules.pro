@@ -1,0 +1,4 @@
+-keep class com.barprepng.app.data.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn com.google.gson.**

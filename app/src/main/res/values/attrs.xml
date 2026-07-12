@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DonutProgressView">
+        <attr name="progressValue" format="float"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="trackColor" format="color"/>
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="centerText" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="HeatmapView">
+        <attr name="cellSize" format="dimension"/>
+        <attr name="cellSpacing" format="dimension"/>
+    </declare-styleable>
+</resources>

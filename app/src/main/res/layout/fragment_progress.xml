@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_midnight">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Progress"
+            android:textColor="@color/text_primary"
+            android:textSize="22sp"
+            android:fontFamily="@font/inter_bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Civil Litigation · All Weeks"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Summary stats row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:background="@drawable/bg_card_elevated"
+                android:padding="14dp" android:layout_marginEnd="8dp">
+                <TextView android:id="@+id/tv_total_attempts"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0" android:textColor="@color/accent_gold"
+                    android:textSize="24sp" android:fontFamily="@font/inter_bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Attempts" android:textColor="@color/text_secondary" android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:background="@drawable/bg_card_elevated"
+                android:padding="14dp" android:layout_marginEnd="8dp">
+                <TextView android:id="@+id/tv_overall_accuracy"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0%" android:textColor="@color/correct_green"
+                    android:textSize="24sp" android:fontFamily="@font/inter_bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Accuracy" android:textColor="@color/text_secondary" android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:background="@drawable/bg_card_elevated"
+                android:padding="14dp">
+                <TextView android:id="@+id/tv_streak_progress"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0🔥" android:textColor="@color/streak_orange"
+                    android:textSize="24sp" android:fontFamily="@font/inter_bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Streak" android:textColor="@color/text_secondary" android:textSize="12sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Per-week progress -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Week Performance"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_semibold"
+            android:layout_marginBottom="12dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_week_stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
+
+        <!-- Recent quizzes -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recent Quizzes"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_semibold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="12dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_recent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No quiz attempts yet.\nStart a quiz from the Home tab!"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:paddingVertical="32dp"
+            android:lineSpacingMultiplier="1.5"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
