@@ -1,0 +1,197 @@
+name: Build Android APK
+
+# Triggers: on every push to main, every PR to main, and manual runs
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # lets you click "Run workflow" in the Actions tab
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+
+    env:
+      # Pin Gradle version — must satisfy AGP 9.1.1's minimum (9.3.1+).
+      # Using 9.3.1 explicitly to match AGP's minimum requirement.
+      GRADLE_VERSION: '9.3.1'
+      # Java toolchain version — AGP 9.x requires JDK 21+.
+      JAVA_VERSION: '21'
+      # Android compile/target API level
+      ANDROID_API: '36'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Accept Android SDK licenses
+        # Explicit license acceptance — sometimes the action's auto-accept misses some.
+        run: yes | sdkmanager --licenses >/dev/null 2>&1 || true
+
+      - name: Install Android SDK packages
+        # API 36 platform is required (compileSdk = 36). For build-tools, 36.0.0
+        # is bleeding-edge and sometimes unavailable — fall back to 35.0.0,
+        # which is fully compatible with compileSdk 36.
+        run: |
+          set -e
+          echo "==> Installing platforms;android-${{ env.ANDROID_API }}"
+          yes | sdkmanager "platforms;android-${{ env.ANDROID_API }}"
+          echo "==> Installing build-tools (try 36.0.0, fallback to 35.0.0)"
+          yes | sdkmanager "build-tools;36.0.0" || \
+            yes | sdkmanager "build-tools;35.0.0"
+          echo "==> Installed packages:"
+          sdkmanager --list_installed 2>/dev/null || true
+
+      - name: Create local.properties and patch gradle.properties
+        # Automatically fixes the AGP 9.x Built-in Kotlin conflict with KSP
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          
+          if [ ! -f gradle.properties ]; then
+            touch gradle.properties
+          fi
+          
+          # Force-injecting compatibility bypass rules for AGP 9.x
+          echo -e "\nandroid.disallowKotlinSourceSets=false" >> gradle.properties
+          echo "org.gradle.parallel=true" >> gradle.properties
+          echo "org.gradle.caching=true" >> gradle.properties
+          echo "org.gradle.configuration-cache=false" >> gradle.properties
+          
+          echo "==> Patched gradle.properties content:"
+          cat gradle.properties
+
+      - name: Create dummy release keystore
+        # The build.gradle.kts release signingConfig reads KEYSTORE_PATH etc.
+        # at evaluation time — if the file doesn't exist, even debug builds fail.
+        # Create a throwaway keystore so the config block evaluates successfully.
+        # Alias MUST be "upload" (matches build.gradle.kts keyAlias = "upload").
+        run: |
+          if [ ! -f my-upload-key.jks ]; then
+            keytool -genkey -v \
+              -keystore my-upload-key.jks \
+              -storepass android -keypass android \
+              -alias upload \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=CI Dummy, OU=Build, O=LegalRecall, L=London, ST=London, C=UK"
+            echo "Created dummy release keystore (alias=upload, password=android)"
+          fi
+
+      - name: Create dummy debug keystore
+        # The build.gradle.kts has a debugConfig signing block that hard-codes:
+        #   storeFile = "${rootDir}/debug.keystore"
+        #   storePassword = "android"
+        #   keyAlias = "androiddebugkey"
+        #   keyPassword = "android"
+        # If debug.keystore doesn't exist, even `assembleDebug` fails at
+        # evaluation time. Generate the standard Android debug keystore with
+        # the EXACT alias/password build.gradle.kts expects.
+        run: |
+          if [ ! -f debug.keystore ]; then
+            keytool -genkey -v \
+              -keystore debug.keystore \
+              -storepass android -keypass android \
+              -alias androiddebugkey \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Android Debug, O=Android, C=US"
+            echo "Created dummy debug keystore (alias=androiddebugkey, password=android)"
+          fi
+
+      - name: Export signing env vars
+        # build.gradle.kts reads these at evaluation time for the release
+        # signingConfig. Set them so the file() calls don't NPE.
+        run: |
+          echo "KEYSTORE_PATH=$(pwd)/my-upload-key.jks" >> $GITHUB_ENV
+          echo "STORE_PASSWORD=android" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=android" >> $GITHUB_ENV
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+          # We generate the wrapper JAR on the fly during this run, so there's
+          # no committed checksum to validate against. Disable validation to
+          # avoid "At least one Gradle Wrapper Jar failed validation!" errors.
+          validate-wrappers: false
+
+      - name: Generate Gradle wrapper
+        # The repo is missing gradlew / gradle-wrapper.jar / gradle-wrapper.properties.
+        # Generate them on the fly with the correct version to satisfy AGP 9.1.1.
+        run: gradle wrapper --gradle-version ${{ env.GRADLE_VERSION }} --distribution-type bin
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Create .env file from secret
+        # The secrets-gradle-plugin reads GEMINI_API_KEY from .env at build time.
+        # If the GitHub secret GEMINI_API_KEY is set, use it. Otherwise fall back
+        # to .env.example (which contains a placeholder) so the build still succeeds.
+        run: |
+          if [ -n "${{ secrets.GEMINI_API_KEY }}" ]; then
+            echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
+            echo "Using real GEMINI_API_KEY from GitHub secret"
+          else
+            cp .env.example .env
+            echo "GEMINI_API_KEY secret not set — using placeholder from .env.example"
+          fi
+
+      - name: Fix KSP version mismatch in libs.versions.toml
+        # The catalog declares KSP 2.3.5 but Kotlin 2.2.10. KSP versions follow
+        # the pattern <kotlin>-<ksp-release>, so 2.3.5 doesn't exist for Kotlin 2.2.10.
+        # Patch the catalog to use KSP 2.2.10-2.0.2 (the latest KSP release for Kotlin 2.2.10).
+        # This is idempotent — only patches if the wrong version is present.
+        run: |
+          if [ -f gradle/libs.versions.toml ]; then
+            echo "==> Before:"
+            grep -E "^(kotlin|googleDevtoolsKsp) =" gradle/libs.versions.toml
+            # Replace any KSP version that doesn't start with the Kotlin version
+            sed -i -E 's/^googleDevtoolsKsp = ".*"/googleDevtoolsKsp = "2.2.10-2.0.2"/' gradle/libs.versions.toml
+            echo "==> After:"
+            grep -E "^(kotlin|googleDevtoolsKsp) =" gradle/libs.versions.toml
+          else
+            echo "WARNING: gradle/libs.versions.toml not found"
+          fi
+
+      - name: Build debug APK
+        # --continue makes Gradle run all tasks even if some fail, so we see
+        # ALL errors in one pass instead of one-at-a-time round trips.
+        # --stacktrace gives us the full call stack for any failure.
+        run: ./gradlew :app:assembleDebug --continue --stacktrace --no-daemon
+
+      - name: Upload APK artifact
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: legal-recall-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Upload build reports on failure
+        # If the build fails, upload Gradle's reports so we can debug remotely.
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: build-reports
+          path: |
+            app/build/reports/
+            build/reports/
+            .gradle/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Print APK location on success
+        if: success()
+        run: |
+          echo "✅ APK built successfully"
+          ls -lh app/build/outputs/apk/debug/app-debug.apk
