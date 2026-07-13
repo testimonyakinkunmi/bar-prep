@@ -29,20 +29,27 @@
     <color name="slate_700">#334155</color>
     <color name="slate_900">#0F172A</color>
 
+    <color name="info_blue">#3B82F6</color>
+
     <color name="brand_midnight">@color/navy_900</color>
     <color name="brand_surface">@color/slate_50</color>
     <color name="accent_gold">@color/gold_500</color>
     <color name="streak_orange">@color/gold_500</color>
     <color name="correct_green">@color/emerald_500</color>
     <color name="wrong_red">@color/rose_500</color>
-    <color name="info_blue">#3B82F6</color>
+    
     <color name="text_primary">@color/slate_900</color>
     <color name="text_secondary">@color/slate_500</color>
     <color name="text_tertiary">@color/slate_400</color>
     <color name="text_on_accent">#FFFFFF</color>
+    
+    <color name="color_primary">@color/navy_800</color>
+    <color name="color_primary_dark">@color/navy_900</color>
+    <color name="color_accent">@color/gold_500</color>
+    <color name="color_correct">@color/emerald_500</color>
+    <color name="color_wrong">@color/rose_500</color>
+    
     <color name="color_on_primary">#FFFFFF</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="color_text_primary">#FFFFFF</color>
     <color name="color_surface">#FFFFFF</color>
     <color name="color_background">@color/slate_50</color>
 </resources>
