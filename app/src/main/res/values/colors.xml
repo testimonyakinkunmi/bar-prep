@@ -52,4 +52,6 @@
     <color name="color_on_primary">#FFFFFF</color>
     <color name="color_surface">#FFFFFF</color>
     <color name="color_background">@color/slate_50</color>
+    <color name="color_text_primary">@color/slate_900</color>
+    <color name="color_text_secondary">@color/slate_500</color>
 </resources>
