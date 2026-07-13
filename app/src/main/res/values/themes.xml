@@ -37,12 +37,18 @@
         <item name="rippleColor">@color/gold_300</item>
         <item name="android:lineSpacingMultiplier">1.3</item>
     </style>
-    
+
     <style name="Widget.BarPrep.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:textColor">@color/brand_midnight</item>
         <item name="strokeColor">@color/brand_midnight</item>
     </style>
-    
+
+    <style name="Widget.BarPrep.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/color_on_primary</item>
+        <item name="backgroundTint">@color/navy_800</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
     <style name="OptionButton.Correct">
         <item name="android:textColor">@color/emerald_600</item>
         <item name="strokeColor">@color/emerald_500</item>
@@ -60,14 +66,6 @@
         <item name="cardElevation">4dp</item>
         <item name="cardBackgroundColor">@color/color_surface</item>
     </style>
-
-    <resources>
-    <style name="Widget.BarPrep.Button.Primary" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/color_on_primary</item>
-        <item name="backgroundTint">@color/navy_800</item>
-        <item name="cornerRadius">12dp</item>
-    </style>
-    </resources>
 
     <style name="WeekCard" parent="CardStyle">
         <item name="cardElevation">2dp</item>
