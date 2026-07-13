@@ -61,6 +61,14 @@
         <item name="cardBackgroundColor">@color/color_surface</item>
     </style>
 
+    <resources>
+    <style name="Widget.BarPrep.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/color_on_primary</item>
+        <item name="backgroundTint">@color/navy_800</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+    </resources>
+
     <style name="WeekCard" parent="CardStyle">
         <item name="cardElevation">2dp</item>
     </style>
