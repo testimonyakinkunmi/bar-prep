@@ -49,4 +49,12 @@
     <color name="chart_fill">#33D4A017</color>
     <color name="chart_bar_1">#3B82F6</color>
     <color name="chart_bar_2">#8B5CF6</color>
+
+    <color name="brand_midnight">@color/navy_900</color>
+    <color name="brand_surface">@color/slate_50</color>
+    <color name="accent_gold">@color/gold_500</color>
+    <color name="streak_orange">@color/gold_500</color>
+    <color name="text_primary">@color/color_text_primary</color>
+    <color name="text_secondary">@color/color_text_secondary</color>
+    <color name="text_on_accent">@color/color_on_primary</color>
 </resources>
