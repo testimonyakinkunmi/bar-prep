@@ -41,6 +41,8 @@
     <color name="text_tertiary">@color/slate_400</color>
     <color name="text_on_accent">#FFFFFF</color>
     <color name="color_on_primary">#FFFFFF</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="color_text_primary">#FFFFFF</color>
     <color name="color_surface">#FFFFFF</color>
     <color name="color_background">@color/slate_50</color>
 </resources>
