@@ -57,4 +57,13 @@
     <color name="text_primary">@color/color_text_primary</color>
     <color name="text_secondary">@color/color_text_secondary</color>
     <color name="text_on_accent">@color/color_on_primary</color>
+
+    <resources>
+    <color name="correct_green">@color/emerald_500</color>
+    <color name="wrong_red">@color/rose_500</color>
+    <color name="info_blue">#3B82F6</color>
+    <color name="text_tertiary">#94A3B8</color>
+    <color name="rose_400">#FB7185</color>
+    <color name="emerald_400">#34D399</color>
+</resources>
 </resources>
