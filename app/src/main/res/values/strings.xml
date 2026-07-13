@@ -28,4 +28,5 @@
     <string name="questions_per_week">Questions Per Week</string>
     <string name="daily_challenge">Daily Challenge</string>
     <string name="micro_quiz">Quick 5-Question Quiz</string>
+     <string name="btn_submit">Submit</string>
 </resources>
