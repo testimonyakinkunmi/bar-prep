@@ -1,30 +1,127 @@
-name: Build Android APK
+name: Android Build & Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build:
+    name: Build APK
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
 
-      - name: Build with Gradle
-        run: ./gradlew clean assembleDebug --refresh-dependencies --no-daemon
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v5
+      - name: Cache Gradle
+        uses: actions/cache@v4
         with:
-          name: debug-apk
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Verify gradle wrapper jar exists
+        run: |
+          if [ ! -s gradle/wrapper/gradle-wrapper.jar ]; then
+            echo "::error::gradle-wrapper.jar is missing or empty — cannot proceed"
+            exit 1
+          fi
+          echo "gradle-wrapper.jar OK: $(du -h gradle/wrapper/gradle-wrapper.jar | cut -f1)"
+
+      # ── DEBUG APK (this is the one you actually need) ───────────────────────
+      - name: Build debug APK
+        run: |
+          ./gradlew assembleDebug \
+            --no-daemon \
+            --stacktrace \
+            --warning-mode=none \
+            -Dorg.gradle.jvmargs="-Xmx2g -XX:MaxMetaspaceSize=512m"
+
+      - name: Verify debug APK was actually produced
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -s "$APK" ]; then
+            echo "::error::Debug APK was not produced at $APK"
+            echo "Contents of outputs dir:"
+            find app/build/outputs -type f 2>/dev/null || echo "outputs dir does not exist"
+            exit 1
+          fi
+          echo "✅ Debug APK exists: $(du -h "$APK" | cut -f1)"
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: BarPrepNG-debug-${{ github.run_number }}
           path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+          if-no-files-found: error
+
+      # ── RELEASE APK is optional/unsigned — do not let it block or silently empty-upload ──
+      - name: Build release APK (unsigned)
+        id: release_build
+        continue-on-error: true
+        run: |
+          ./gradlew assembleRelease \
+            --no-daemon \
+            --stacktrace \
+            --warning-mode=none \
+            -Dorg.gradle.jvmargs="-Xmx2g -XX:MaxMetaspaceSize=512m"
+
+      - name: Check if release APK exists
+        id: check_release
+        run: |
+          APK="app/build/outputs/apk/release/app-release-unsigned.apk"
+          if [ -s "$APK" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Release APK exists: $(du -h "$APK" | cut -f1)"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "⚠️  Release APK was not produced (this is OK — debug APK is what you need)"
+          fi
+
+      - name: Upload release APK (only if it actually exists)
+        if: steps.check_release.outputs.exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: BarPrepNG-release-unsigned-${{ github.run_number }}
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Post build summary
+        if: always()
+        run: |
+          echo "### Build Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          DEBUG_APK="app/build/outputs/apk/debug/app-debug.apk"
+          RELEASE_APK="app/build/outputs/apk/release/app-release-unsigned.apk"
+          if [ -s "$DEBUG_APK" ]; then
+            echo "- ✅ Debug APK — $(du -h "$DEBUG_APK" | cut -f1)  **← download this one**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ Debug APK — FAILED TO BUILD" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -s "$RELEASE_APK" ]; then
+            echo "- ✅ Release APK (unsigned) — $(du -h "$RELEASE_APK" | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⚠️ Release APK — not produced (unsigned release builds are optional; ignore)" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f app/src/main/res/raw/quiz_data.json ]; then
+            Q=$(python3 -c "import json; d=json.load(open('app/src/main/res/raw/quiz_data.json')); print(sum(len(w['questions']) for w in d['weeks']))" 2>/dev/null || echo "?")
+            echo "📚 **$Q questions** across 17 weeks (Civil Litigation)" >> $GITHUB_STEP_SUMMARY
+          fi
