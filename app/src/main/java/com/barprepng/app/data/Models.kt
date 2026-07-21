@@ -2,70 +2,58 @@ package com.barprepng.app.data
 
 data class Question(
     val id: String,
+    val week: Int,
+    val topic: String,
+    val scenario: String?,
     val question: String,
     val options: List<String>,
-    val correctIndex: Int,
-    val explanation: String = ""
+    val correct_index: Int,
+    val explanation: String,
+    val law_reference: String
 )
 
-data class QuizSession(
-    val weekNumber: Int,
-    val weekTitle: String,
-    val questions: List<Question>,
-    val answers: List<Int?>,
-    val score: Int,
-    val correctCount: Int,
-    val totalQuestions: Int
-)
-
-data class WeekData(
-    val weekNumber: Int,
+data class Week(
+    val week_number: Int,
     val title: String,
+    val description: String,
     val questions: List<Question>
 )
 
+data class QuizData(
+    val subject: String,
+    val subject_code: String,
+    val weeks: List<Week>
+)
+
 data class QuizAttempt(
-    val id: Long,
-    val weekNumber: Int,
-    val weekTitle: String,
-    val score: Int,
-    val totalQuestions: Int,
-    val correctCount: Int,
-    val timestamp: Long,
-    val durationMs: Long
-)
-
-data class WeekStat(
-    val weekNumber: Int,
-    val weekTitle: String,
-    val totalAttempts: Int,
-    val avgScore: Float,
-    val bestScore: Int,
-    val totalCorrect: Int,
-    val totalAnswered: Int,
-    val accuracyPercent: Float
-)
-
-data class ScorePoint(
-    val timestamp: Long,
-    val score: Int,
-    val weekNumber: Int,
-    val weekTitle: String
-)
-
-data class StreakData(
-    val currentStreak: Int,
-    val longestStreak: Int,
-    val lastActivityDate: String,
-    val totalDaysStudied: Int
-)
-
-data class QuestionAccuracy(
     val questionId: String,
     val weekNumber: Int,
-    val topic: String,
-    val timesAttempted: Int,
-    val timesCorrect: Int,
-    val accuracyPercent: Float,
-    val questionText: String
+    val selectedIndex: Int,
+    val isCorrect: Boolean,
+    val timestamp: Long = System.currentTimeMillis()
+)
+
+data class WeekStats(
+    val weekNumber: Int,
+    val title: String,
+    val totalQuestions: Int,
+    val attempted: Int,
+    val correct: Int
+) {
+    val accuracy: Float get() = if (attempted == 0) 0f else correct.toFloat() / attempted.toFloat()
+    val accuracyPercent: Int get() = (accuracy * 100).toInt()
+}
+
+data class QuizSession(
+    val weekNumber: Int,
+    val isMicro: Boolean = false,
+    val isRandom: Boolean = false,
+    val questions: List<Question> = emptyList()
+)
+
+data class CorrectionItem(
+    val questionNumber: Int,
+    val question: Question,
+    val selectedIndex: Int,
+    val isCorrect: Boolean
 )

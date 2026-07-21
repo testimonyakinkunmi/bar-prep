@@ -16,14 +16,14 @@
             android:layout_weight="1"
             android:text="Week 3 · Courts with Civil Jurisdiction"
             android:textColor="@color/text_primary"
-            android:textSize="13sp" android:fontFamily="@font/inter_semibold"
+            android:textSize="13sp" 
             android:maxLines="1" android:ellipsize="end"/>
 
         <TextView android:id="@+id/tv_wstat_best"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Best: 92%"
             android:textColor="@color/accent_gold"
-            android:textSize="12sp" android:fontFamily="@font/inter_semibold"/>
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"

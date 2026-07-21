@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="font_path_regular">fonts/inter_regular.ttf</string>
-    <string name="font_path_semibold">fonts/inter_semibold.ttf</string>
-    <string name="font_path_bold">fonts/inter_bold.ttf</string>
-</resources>

@@ -18,7 +18,7 @@
             android:text="✓"
             android:textColor="@color/correct_green"
             android:textSize="16sp"
-            android:fontFamily="@font/inter_bold"
+            
             android:layout_marginEnd="8dp"/>
 
         <TextView

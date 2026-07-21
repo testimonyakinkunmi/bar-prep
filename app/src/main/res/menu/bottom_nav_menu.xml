@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/ic_home"
-        android:title="Home" />
-    <item
-        android:id="@+id/nav_progress"
-        android:icon="@drawable/ic_progress"
-        android:title="Progress" />
-    <item
-        android:id="@+id/nav_insights"
-        android:icon="@drawable/ic_insights"
-        android:title="Insights" />
+    <item android:id="@+id/nav_home"
+        android:title="@string/nav_home"
+        android:icon="@drawable/ic_home"/>
+    <item android:id="@+id/nav_progress"
+        android:title="@string/nav_progress"
+        android:icon="@drawable/ic_progress"/>
+    <item android:id="@+id/nav_insights"
+        android:title="@string/nav_insights"
+        android:icon="@drawable/ic_insights"/>
 </menu>

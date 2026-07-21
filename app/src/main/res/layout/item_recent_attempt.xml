@@ -15,7 +15,7 @@
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Week 3 · Courts with Civil Jurisdiction"
             android:textColor="@color/text_primary" android:textSize="13sp"
-            android:fontFamily="@font/inter_semibold" android:maxLines="1" android:ellipsize="end"/>
+             android:maxLines="1" android:ellipsize="end"/>
         <TextView android:id="@+id/tv_recent_date"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Today at 2:30 PM"
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="80%"
             android:textColor="@color/correct_green" android:textSize="18sp"
-            android:fontFamily="@font/inter_bold"/>
+            />
         <TextView android:id="@+id/tv_recent_fraction"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="28/35"

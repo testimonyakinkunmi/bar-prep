@@ -142,7 +142,7 @@ class ResultsFragment : Fragment() {
             (activity as? MainActivity)?.let {
                 it.loadFragment(HomeFragment())
                 it.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(
-                    com.barprepng.app.R.id.bottomNav
+                    com.barprepng.app.R.id.bottom_nav
                 )?.selectedItemId = com.barprepng.app.R.id.nav_home
             }
         }

@@ -15,7 +15,7 @@
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Insights" android:textColor="@color/text_primary"
-            android:textSize="22sp" android:fontFamily="@font/inter_bold" android:layout_marginBottom="4dp"/>
+            android:textSize="22sp"  android:layout_marginBottom="4dp"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Data-driven study analytics" android:textColor="@color/text_secondary"
@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content" android:layout_height="36dp"
                     android:text="Score Trend" android:gravity="center"
                     android:paddingHorizontal="16dp" android:textSize="13sp"
-                    android:fontFamily="@font/inter_semibold"
+                    
                     android:textColor="@color/text_on_accent"
                     android:background="@drawable/bg_streak_badge"
                     android:layout_marginEnd="8dp"/>
@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content" android:layout_height="36dp"
                     android:text="Topic Heatmap" android:gravity="center"
                     android:paddingHorizontal="16dp" android:textSize="13sp"
-                    android:fontFamily="@font/inter_semibold"
+                    
                     android:textColor="@color/text_secondary"
                     android:background="@drawable/bg_week_chip"
                     android:layout_marginEnd="8dp"/>
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content" android:layout_height="36dp"
                     android:text="Q Accuracy" android:gravity="center"
                     android:paddingHorizontal="16dp" android:textSize="13sp"
-                    android:fontFamily="@font/inter_semibold"
+                    
                     android:textColor="@color/text_secondary"
                     android:background="@drawable/bg_week_chip"
                     android:layout_marginEnd="8dp"/>
@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content" android:layout_height="36dp"
                     android:text="Weak Areas" android:gravity="center"
                     android:paddingHorizontal="16dp" android:textSize="13sp"
-                    android:fontFamily="@font/inter_semibold"
+                    
                     android:textColor="@color/text_secondary"
                     android:background="@drawable/bg_week_chip"/>
             </LinearLayout>
@@ -81,7 +81,7 @@
                 <TextView android:id="@+id/tv_chart_title"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="Score Trend" android:textColor="@color/text_primary"
-                    android:textSize="15sp" android:fontFamily="@font/inter_semibold"
+                    android:textSize="15sp" 
                     android:layout_marginBottom="16dp"/>
 
                 <!-- Custom chart view -->
@@ -116,7 +116,7 @@
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="Topic Accuracy Heatmap"
                     android:textColor="@color/text_primary" android:textSize="15sp"
-                    android:fontFamily="@font/inter_semibold" android:layout_marginBottom="6dp"/>
+                     android:layout_marginBottom="6dp"/>
 
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="Darker = stronger. Lighter = needs work."
@@ -137,7 +137,7 @@
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Hardest Questions" android:textColor="@color/text_primary"
-                android:textSize="16sp" android:fontFamily="@font/inter_semibold"
+                android:textSize="16sp" 
                 android:layout_marginBottom="12dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -154,7 +154,7 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Weak Areas — Focus Here"
                 android:textColor="@color/text_primary" android:textSize="16sp"
-                android:fontFamily="@font/inter_semibold" android:layout_marginBottom="12dp"/>
+                 android:layout_marginBottom="12dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_weak"

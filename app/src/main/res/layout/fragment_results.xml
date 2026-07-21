@@ -21,7 +21,7 @@
             android:text="Quiz Complete!"
             android:textColor="@color/text_primary"
             android:textSize="26sp"
-            android:fontFamily="@font/inter_bold"
+            
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="4dp"/>
 
@@ -63,7 +63,7 @@
                         android:text="80%"
                         android:textColor="@color/text_on_accent"
                         android:textSize="26sp"
-                        android:fontFamily="@font/inter_bold"/>
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
                     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
                         <TextView android:id="@+id/tv_correct_count" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:text="28"
-                            android:textColor="@color/correct_green" android:textSize="20sp" android:fontFamily="@font/inter_bold"/>
+                            android:textColor="@color/correct_green" android:textSize="20sp" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:text="correct" android:textColor="@color/text_secondary" android:textSize="11sp"/>
                     </LinearLayout>
@@ -103,7 +103,7 @@
                     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
                         <TextView android:id="@+id/tv_wrong_count" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:text="7"
-                            android:textColor="@color/wrong_red" android:textSize="20sp" android:fontFamily="@font/inter_bold"/>
+                            android:textColor="@color/wrong_red" android:textSize="20sp" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:text="incorrect" android:textColor="@color/text_secondary" android:textSize="11sp"/>
                     </LinearLayout>
@@ -128,7 +128,7 @@
                 android:text="Outstanding! Keep up the excellent work."
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
-                android:fontFamily="@font/inter_semibold"
+                
                 android:gravity="center"
                 android:padding="18dp"
                 android:lineSpacingMultiplier="1.4"/>
@@ -141,7 +141,7 @@
             android:text="Review Answers"
             android:textColor="@color/text_primary"
             android:textSize="16sp"
-            android:fontFamily="@font/inter_semibold"
+            
             android:layout_marginBottom="12dp"/>
 
         <androidx.recyclerview.widget.RecyclerView

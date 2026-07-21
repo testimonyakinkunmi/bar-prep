@@ -1,57 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="navy_900">#0A0E1A</color>
-    <color name="navy_800">#111827</color>
-    <color name="navy_700">#1F2937</color>
-    <color name="navy_600">#374151</color>
+    <!-- Brand Core -->
+    <color name="brand_midnight">#0A0F1E</color>
+    <color name="brand_navy">#0D1B2A</color>
+    <color name="brand_navy_card">#111D2E</color>
+    <color name="brand_surface">#16243A</color>
+    <color name="brand_surface_elevated">#1C2E44</color>
+    <color name="brand_divider">#1F3A54</color>
 
-    <color name="gold_500">#D4A017</color>
-    <color name="gold_400">#F0BB2C</color>
-    <color name="gold_300">#F5CF65</color>
-    <color name="gold_100">#FDF6E3</color>
+    <!-- Accent -->
+    <color name="accent_gold">#F0A500</color>
+    <color name="accent_gold_light">#FFD166</color>
+    <color name="accent_gold_dark">#C47D00</color>
+    <color name="accent_gold_bg">#1A1400</color>
 
-    <color name="emerald_600">#059669</color>
-    <color name="emerald_500">#10B981</color>
-    <color name="emerald_400">#34D399</color>
-    <color name="emerald_100">#D1FAE5</color>
+    <!-- Semantic -->
+    <color name="correct_green">#00C48C</color>
+    <color name="correct_green_bg">#00201A</color>
+    <color name="wrong_red">#FF4D6D</color>
+    <color name="wrong_red_bg">#200010</color>
+    <color name="streak_orange">#FF6B35</color>
+    <color name="info_blue">#4FC3F7</color>
+    <color name="info_blue_bg">#001A2A</color>
 
-    <color name="rose_600">#E11D48</color>
-    <color name="rose_500">#F43F5E</color>
-    <color name="rose_400">#FB7185</color>
-    <color name="rose_100">#FFE4E6</color>
+    <!-- Week tag colours -->
+    <color name="week_color_1">#7C4DFF</color>
+    <color name="week_color_2">#00BCD4</color>
+    <color name="week_color_3">#FF6B6B</color>
+    <color name="week_color_4">#4CAF50</color>
+    <color name="week_color_5">#FF9800</color>
 
-    <color name="slate_50">#F8FAFC</color>
-    <color name="slate_100">#F1F5F9</color>
-    <color name="slate_200">#E2E8F0</color>
-    <color name="slate_300">#CBD5E1</color>
-    <color name="slate_400">#94A3B8</color>
-    <color name="slate_500">#64748B</color>
-    <color name="slate_700">#334155</color>
-    <color name="slate_900">#0F172A</color>
+    <!-- Text -->
+    <color name="text_primary">#F0F4FF</color>
+    <color name="text_secondary">#8FA8C8</color>
+    <color name="text_tertiary">#4A6380</color>
+    <color name="text_on_accent">#0A0F1E</color>
 
-    <color name="info_blue">#3B82F6</color>
+    <!-- Progress bar bg -->
+    <color name="progress_track">#1F3A54</color>
 
-    <color name="brand_midnight">@color/navy_900</color>
-    <color name="brand_surface">@color/slate_50</color>
-    <color name="accent_gold">@color/gold_500</color>
-    <color name="streak_orange">@color/gold_500</color>
-    <color name="correct_green">@color/emerald_500</color>
-    <color name="wrong_red">@color/rose_500</color>
-    
-    <color name="text_primary">@color/slate_900</color>
-    <color name="text_secondary">@color/slate_500</color>
-    <color name="text_tertiary">@color/slate_400</color>
-    <color name="text_on_accent">#FFFFFF</color>
-    
-    <color name="color_primary">@color/navy_800</color>
-    <color name="color_primary_dark">@color/navy_900</color>
-    <color name="color_accent">@color/gold_500</color>
-    <color name="color_correct">@color/emerald_500</color>
-    <color name="color_wrong">@color/rose_500</color>
-    
-    <color name="color_on_primary">#FFFFFF</color>
-    <color name="color_surface">#FFFFFF</color>
-    <color name="color_background">@color/slate_50</color>
-    <color name="color_text_primary">@color/slate_900</color>
-    <color name="color_text_secondary">@color/slate_500</color>
+    <!-- Transparent -->
+    <color name="transparent">#00000000</color>
+    <color name="overlay_dark">#CC0A0F1E</color>
+    <color name="card_stroke">#1E3A54</color>
 </resources>
