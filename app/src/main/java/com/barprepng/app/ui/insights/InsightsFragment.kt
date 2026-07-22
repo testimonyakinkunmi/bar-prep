@@ -48,12 +48,12 @@ class InsightsFragment : Fragment() {
         binding.chipScore.setOnClickListener { showTab(0) }
         binding.chipHeatmap.setOnClickListener { showTab(1) }
         binding.chipAccuracy.setOnClickListener { showTab(2) }
-        binding.chipWeak.setOnClickListener { showTab(3) }
+        binding.chipWeakest.setOnClickListener { showTab(3) }
     }
 
     private fun showTab(tab: Int) {
         currentTab = tab
-        val chips = listOf(binding.chipScore, binding.chipHeatmap, binding.chipAccuracy, binding.chipWeak)
+        val chips = listOf(binding.chipScore, binding.chipHeatmap, binding.chipAccuracy, binding.chipWeakest)
         chips.forEachIndexed { i, chip ->
             if (i == tab) {
                 chip.setTextColor(Color.parseColor("#0A0F1E"))
