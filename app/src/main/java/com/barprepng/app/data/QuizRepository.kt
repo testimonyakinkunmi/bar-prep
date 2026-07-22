@@ -1,139 +1,99 @@
 package com.barprepng.app.data
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
+import java.io.InputStreamReader
 
 class QuizRepository(private val context: Context) {
 
-    private val prefs: SharedPreferences =
-        context.getSharedPreferences("barprep_prefs", Context.MODE_PRIVATE)
+    private val db = DatabaseHelper(context)
+    private val subjectData: SubjectData by lazy { loadData() }
 
-    private val gson = Gson()
-    private var cachedData: QuizData? = null
-
-    // ── Load JSON ──────────────────────────────────────────────────────────
-    fun loadQuizData(): QuizData {
-        cachedData?.let { return it }
-        val raw = context.resources.openRawResource(
+    private fun loadData(): SubjectData {
+        val inputStream = context.resources.openRawResource(
             context.resources.getIdentifier("quiz_data", "raw", context.packageName)
-        ).bufferedReader().use { it.readText() }
-        val type = object : TypeToken<QuizData>() {}.type
-        val data: QuizData = gson.fromJson(raw, type)
-        cachedData = data
-        return data
+        )
+        val reader = InputStreamReader(inputStream)
+        return Gson().fromJson(reader, SubjectData::class.java)
     }
 
-    fun getWeeks(): List<Week> = loadQuizData().weeks
+    fun getAllWeeks(): List<WeekData> = subjectData.weeks
+    fun getWeek(weekNumber: Int): WeekData? = subjectData.weeks.find { it.weekNumber == weekNumber }
+    fun getSubjectName(): String = subjectData.subject
 
-    fun getWeek(number: Int): Week? = getWeeks().find { it.week_number == number }
-
-    fun getRandomQuestions(count: Int): List<Question> =
-        getWeeks().flatMap { it.questions }.shuffled().take(count)
-
-    fun getMicroQuizQuestions(): List<Question> =
-        getWeeks().flatMap { it.questions }.shuffled().take(5)
-
-    // ── Attempt persistence ────────────────────────────────────────────────
-    private fun attemptKey(weekNumber: Int) = "attempts_week_$weekNumber"
-
-    fun saveAttempt(attempt: QuizAttempt) {
-        val key = attemptKey(attempt.weekNumber)
-        val existing = getAttempts(attempt.weekNumber).toMutableList()
-        existing.removeAll { it.questionId == attempt.questionId }
-        existing.add(attempt)
-        prefs.edit().putString(key, gson.toJson(existing)).apply()
-        recordStudyDay()
-    }
-
-    fun saveAttempts(attempts: List<QuizAttempt>) {
-        attempts.forEach { saveAttempt(it) }
-    }
-
-    fun getAttempts(weekNumber: Int): List<QuizAttempt> {
-        val json = prefs.getString(attemptKey(weekNumber), null) ?: return emptyList()
-        val type = object : TypeToken<List<QuizAttempt>>() {}.type
-        return try { gson.fromJson(json, type) } catch (e: Exception) { emptyList() }
-    }
-
-    fun getAllAttempts(): List<QuizAttempt> =
-        getWeeks().flatMap { getAttempts(it.week_number) }
-
-    fun getWeekStats(weekNumber: Int): WeekStats {
-        val week = getWeek(weekNumber) ?: return WeekStats(weekNumber, "", 0, 0, 0)
-        val attempts = getAttempts(weekNumber)
-        val correct = attempts.count { it.isCorrect }
-        return WeekStats(weekNumber, week.title, week.questions.size, attempts.size, correct)
-    }
-
-    fun getAllWeekStats(): List<WeekStats> = getWeeks().map { getWeekStats(it.week_number) }
-
-    // ── Streak tracking ────────────────────────────────────────────────────
-    private fun recordStudyDay() {
-        val today = todayString()
-        val studiedDays = getStudiedDays().toMutableSet()
-        studiedDays.add(today)
-        prefs.edit().putStringSet("studied_days", studiedDays).apply()
-    }
-
-    fun getStudiedDays(): Set<String> = prefs.getStringSet("studied_days", emptySet()) ?: emptySet()
-
-    fun getCurrentStreak(): Int {
-        val days = getStudiedDays().sorted().reversed()
-        if (days.isEmpty()) return 0
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        var streak = 0
-        var check = Calendar.getInstance()
-        for (day in days) {
-            val dayDate = sdf.parse(day) ?: break
-            val checkStr = sdf.format(check.time)
-            if (day == checkStr) {
-                streak++
-                check.add(Calendar.DAY_OF_YEAR, -1)
-            } else break
+    fun buildWeekSession(weekNumber: Int, questionCount: Int = -1): QuizSession? {
+        val week = getWeek(weekNumber) ?: return null
+        val questions = if (questionCount > 0 && questionCount < week.questions.size) {
+            week.questions.shuffled().take(questionCount)
+        } else {
+            week.questions.shuffled()
         }
-        return streak
+        return QuizSession(
+            sessionId = "W${weekNumber}_${System.currentTimeMillis()}",
+            weekNumber = weekNumber,
+            weekTitle = week.title,
+            questions = questions
+        )
     }
 
-    fun getLongestStreak(): Int {
-        val days = getStudiedDays().sorted()
-        if (days.isEmpty()) return 0
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        var longest = 1
-        var current = 1
-        for (i in 1 until days.size) {
-            val prev = sdf.parse(days[i - 1]) ?: continue
-            val curr = sdf.parse(days[i]) ?: continue
-            val diff = (curr.time - prev.time) / (1000 * 60 * 60 * 24)
-            if (diff == 1L) {
-                current++
-                if (current > longest) longest = current
-            } else current = 1
+    fun buildRandomSession(questionCount: Int = 20): QuizSession {
+        val allQuestions = subjectData.weeks.flatMap { it.questions }
+        val selected = allQuestions.shuffled().take(questionCount)
+        return QuizSession(
+            sessionId = "RAND_${System.currentTimeMillis()}",
+            weekNumber = 0,
+            weekTitle = "Random Mix",
+            questions = selected
+        )
+    }
+
+    fun buildMicroQuiz(count: Int = 4): MicroQuiz {
+        val randomWeek = subjectData.weeks.random()
+        val questions = randomWeek.questions.shuffled().take(count)
+        return MicroQuiz(questions = questions, weekTitle = randomWeek.title)
+    }
+
+    fun buildDifficultSession(hardQuestions: List<QuestionAccuracy>): QuizSession {
+        val allQuestions = subjectData.weeks.flatMap { it.questions }
+        val hardIds = hardQuestions.map { it.questionId }.toSet()
+        val difficult = allQuestions.filter { it.id in hardIds }
+        val selected = if (difficult.size >= 5) difficult.shuffled().take(20)
+        else (difficult + allQuestions.shuffled()).take(20)
+        return QuizSession(
+            sessionId = "HARD_${System.currentTimeMillis()}",
+            weekNumber = -1,
+            weekTitle = "Weak Areas Focus",
+            questions = selected
+        )
+    }
+
+    fun saveSession(session: QuizSession, durationMs: Long): Long =
+        db.saveQuizAttempt(session, durationMs)
+
+    fun getStreakData(): StreakData = db.getStreakData()
+
+    fun getInsightSummary(): InsightSummary {
+        val weekStats = db.getWeekStats()
+        val sorted = weekStats.sortedBy { it.accuracyPercent }
+        val hardest = db.getHardestQuestions(20)
+        val allQuestionsMap = subjectData.weeks.flatMap { it.questions }.associateBy { it.id }
+        val enrichedHardest = hardest.map { qa ->
+            val q = allQuestionsMap[qa.questionId]
+            qa.copy(topic = q?.topic ?: "", questionText = q?.question?.take(80) ?: qa.questionId)
         }
-        return longest
+        return InsightSummary(
+            totalAttempts = db.getTotalAttempts(),
+            overallAccuracy = db.getOverallAccuracy(),
+            bestWeek = sorted.lastOrNull(),
+            weakestWeek = sorted.firstOrNull(),
+            weekStats = weekStats,
+            recentScores = db.getScoreHistory(),
+            hardestQuestions = enrichedHardest,
+            streakData = db.getStreakData()
+        )
     }
 
-    // ── Score history for line chart ───────────────────────────────────────
-    fun getScoreHistory(): List<Pair<String, Float>> {
-        val all = getAllAttempts().sortedBy { it.timestamp }
-        if (all.isEmpty()) return emptyList()
-        val sdf = SimpleDateFormat("MM/dd", Locale.getDefault())
-        val byDay = all.groupBy { sdf.format(Date(it.timestamp)) }
-        return byDay.map { (day, attempts) ->
-            val acc = attempts.count { it.isCorrect }.toFloat() / attempts.size.toFloat() * 100f
-            day to acc
-        }.takeLast(14)
-    }
-
-    // ── Helpers ────────────────────────────────────────────────────────────
-    private fun todayString(): String =
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
-    fun resetAllData() {
-        prefs.edit().clear().apply()
-    }
+    fun getRecentAttempts(limit: Int = 20) = db.getRecentAttempts(limit)
+    fun getScoreHistory(weekNumber: Int = -1) = db.getScoreHistory(weekNumber)
+    fun getWeekStats() = db.getWeekStats()
 }
